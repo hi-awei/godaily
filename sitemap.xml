@@ -1,0 +1,43 @@
+<?php
+/**
+ * 动态生成 sitemap.xml
+ */
+require_once 'includes/db.php';
+
+header('Content-Type: application/xml; charset=utf-8');
+echo '<?xml version="1.0" encoding="UTF-8"?>';
+echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+try {
+    $db = db();
+    
+    // 首页和主要页面
+    $staticPages = [
+        ['loc' => 'https://993899.com/index.php', 'priority' => '1.0', 'changefreq' => 'daily'],
+        ['loc' => 'https://993899.com/tools.php', 'priority' => '0.9', 'changefreq' => 'daily'],
+        ['loc' => 'https://993899.com/news.php', 'priority' => '0.9', 'changefreq' => 'daily'],
+        ['loc' => 'https://993899.com/submit.php', 'priority' => '0.6', 'changefreq' => 'monthly'],
+        ['loc' => 'https://993899.com/privacy.php', 'priority' => '0.3', 'changefreq' => 'yearly'],
+    ];
+    foreach ($staticPages as $p) {
+        echo "<url><loc>{$p['loc']}</loc><priority>{$p['priority']}</priority><changefreq>{$p['changefreq']}</changefreq><lastmod>" . date('Y-m-d') . "</lastmod></url>";
+    }
+    
+    // 工具详情页
+    $tools = $db->query("SELECT slug, updated_at FROM tools WHERE status=1")->fetchAll();
+    foreach ($tools as $t) {
+        $mod = $t['updated_at'] ? date('Y-m-d', strtotime($t['updated_at'])) : date('Y-m-d');
+        echo "<url><loc>https://993899.com/tool.php?slug={$t['slug']}</loc><priority>0.7</priority><changefreq>weekly</changefreq><lastmod>{$mod}</lastmod></url>";
+    }
+    
+    // 分类页
+    $cats = $db->query("SELECT slug FROM categories")->fetchAll();
+    foreach ($cats as $c) {
+        echo "<url><loc>https://993899.com/tools.php?category={$c['slug']}</loc><priority>0.7</priority><changefreq>weekly</changefreq><lastmod>" . date('Y-m-d') . "</lastmod></url>";
+    }
+    
+} catch (Exception $e) {
+    // 出错时只输出静态页面
+}
+
+echo '</urlset>';

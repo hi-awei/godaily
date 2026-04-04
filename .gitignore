@@ -1,0 +1,14 @@
+﻿admin/
+*.sql
+*.json
+*.log
+*.txt
+*.ps1
+*.js
+*.sh
+*.csv
+config.php
+setup.php
+.htaccess
+.env
+.DS_Store

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="google-adsense-account" content="ca-pub-4485249374604824">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具书签 - GoDaily</title>
+    <meta name="description" content="一键将AI工具添加为浏览器书签，方便快速访问！包含ChatGPT、Claude、Midjourney等热门工具。">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 28px; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: #94a3b8; margin-bottom: 32px; font-size: 15px; }
+        .tip { background: #1e293b; border-radius: 12px; padding: 16px 20px; margin-bottom: 32px; text-align: center; font-size: 14px; color: #fbbf24; }
+        .tip strong { color: #fbbf24; }
+        
+        .main-bookmark {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .main-bookmark h2 { font-size: 20px; margin-bottom: 16px; }
+        .main-bookmark p { color: #c7d2fe; font-size: 14px; margin-bottom: 20px; }
+        .main-btn {
+            display: inline-block;
+            background: white;
+            color: #6366f1;
+            padding: 14px 36px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: grab;
+            text-decoration: none;
+            user-select: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .main-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99,102,241,0.4); }
+        .main-btn:active { cursor: grabbing; transform: translateY(0); }
+        .main-btn::before { content: "⭐ "; }
+        
+        .category { margin-bottom: 32px; }
+        .category-title { font-size: 18px; margin-bottom: 16px; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
+        .category-title .icon { font-size: 22px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+        
+        .tool-item {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s;
+        }
+        .tool-item:hover { background: #334155; }
+        .tool-name { font-size: 14px; font-weight: 500; color: #f8fafc; }
+        .tool-name small { display: block; color: #64748b; font-size: 11px; font-weight: 400; margin-top: 2px; }
+        .copy-btn {
+            background: #334155;
+            color: #94a3b8;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover { background: #6366f1; color: white; }
+        .copy-btn.copied { background: #10b981; color: white; }
+        
+        .instructions { background: #1e293b; border-radius: 12px; padding: 24px; margin-top: 40px; }
+        .instructions h3 { margin-bottom: 16px; font-size: 16px; }
+        .instructions ol { padding-left: 20px; line-height: 2; color: #94a3b8; font-size: 14px; }
+        .instructions li { margin-bottom: 4px; }
+        .instructions code { background: #334155; padding: 2px 6px; border-radius: 4px; color: #a5b4fc; font-size: 12px; }
+        
+        .footer { text-align: center; margin-top: 48px; color: #475569; font-size: 13px; }
+        .footer a { color: #6366f1; text-decoration: none; }
+        
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+            .main-bookmark { padding: 24px; }
+            h1 { font-size: 22px; }
+        }
+    </style>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4485249374604824" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AI工具书签</h1>
+        <p class="subtitle">一键将 AI 工具添加为浏览器书签，方便快速访问！</p>
+        
+        <div class="tip">
+            💡 <strong>使用提示：</strong>点击下方紫色按钮可直接拖拽到书签栏，或右键 → "添加到书签"
+        </div>
+        
+        <div class="main-bookmark">
+            <h2>⭐ 一键打开 AI 工具集</h2>
+            <p>包含 300+ AI 工具，按分类整理，持续更新</p>
+            <a class="main-btn" href="javascript:(function(){window.open('https://www.993899.com/tools.php','_blank','width=1200,height=800');})();">AI工具集</a>
+        </div>
+        
+        <div class="category">
+            <div class="category-title"><span class="icon">💬</span> AI 对话助手</div>
+            <div class="grid">
+                <div class="tool-item">
+                    <div class="tool-name">ChatGPT<small>OpenAI</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://chat.openai.com')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Claude<small>Anthropic</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://claude.ai')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Gemini<small>Google</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://gemini.google.com')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Kimi<small>月之暗面</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://kimi.moonshot.cn')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">豆包<small>字节跳动</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://www.doubao.com')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">讯飞星火<small>科大讯飞</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://xinghuo.xfyun.cn')">打开</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-title"><span class="icon">🎨</span> AI 图像生成</div>
+            <div class="grid">
+                <div class="tool-item">
+                    <div class="tool-name">Midjourney<small>最流行的AI绘图</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://www.midjourney.com')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">DALL·E<small>OpenAI</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://openai.com/dall-e-3')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Stable Diffusion<small>开源</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://stability.ai')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">通义万相<small>阿里</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://tongyi.aliyun.com')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Adobe Firefly<small>Adobe</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://firefly.adobe.com')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">笔灵AI<small>论文写作</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://ibiling.cn')">打开</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-title"><span class="icon">🎬</span> AI 视频生成</div>
+            <div class="grid">
+                <div class="tool-item">
+                    <div class="tool-name">Sora<small>OpenAI视频</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://openai.com/sora')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Runway<small>AI视频编辑</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://runwayml.com')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Pika<small>AI视频生成</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://pika.art')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">HeyGen<small>AI数字人</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://heygen.com')">打开</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-title"><span class="icon">⌨️</span> AI 编程助手</div>
+            <div class="grid">
+                <div class="tool-item">
+                    <div class="tool-name">Cursor<small>AI代码编辑器</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://cursor.sh')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Copilot<small>GitHub</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://github.com/features/copilot')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">MarsCode<small>字节跳动</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://marscode.cn')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">通义灵码<small>阿里云</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://tongyi.lingma.aliyun.com')">打开</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-title"><span class="icon">🛠️</span> AI 效率办公</div>
+            <div class="grid">
+                <div class="tool-item">
+                    <div class="tool-name">Notion AI<small>笔记+AI</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://notion.so')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">Gamma<small>AI PPT</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://gamma.app')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">WPS AI<small>办公套件</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://chat.wps.cn')">打开</button>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-name">秘塔AI搜索<small>AI搜索引擎</small></div>
+                    <button class="copy-btn" onclick="copy(this, 'https://metaso.cn')">打开</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📖 如何添加书签？</h3>
+            <ol>
+                <li>在桌面浏览器中，<strong>右键点击</strong>上方紫色按钮「AI工具集」</li>
+                <li>选择「<strong>添加到书签</strong>」</li>
+                <li>书签位置选择「<strong>书签栏</strong>」</li>
+                <li>保存后，点击书签栏的「AI工具集」即可快速打开工具导航</li>
+            </ol>
+            <p style="margin-top:16px;font-size:13px;color:#64748b;">
+                💡 <strong>提示：</strong>也可以直接拖拽按钮到书签栏！
+            </p>
+        </div>
+        
+        <div class="footer">
+            由 <a href="https://www.993899.com">GoDaily AI工具导航</a> 提供 · 持续更新中
+        </div>
+    </div>
+    
+    <script>
+    function copy(btn, url) {
+        window.open(url, '_blank');
+    }
+    </script>
+</body>
+</html>
