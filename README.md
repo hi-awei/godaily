@@ -1,4 +1,4 @@
-﻿# GoDaily - 姣忔棩AI宸ュ叿瀵艰埅
+# GoDaily - 姣忔棩AI宸ュ叿瀵艰埅
 
 > 鍙戠幇鍜屾暣鐞嗘渶浼樿川鐨凙I宸ュ叿锛屼负鐢ㄦ埛鎻愪緵鍏ㄩ潰鐨凙I宸ュ叿瀵艰埅鏈嶅姟銆?
 **瀹樼綉锛?* [https://993899.com](https://993899.com)
@@ -19,15 +19,16 @@
 
 ## 鐩綍缁撴瀯
 
-\\\
+`
+.
 鈹溾攢鈹€ index.php          # 棣栭〉
 鈹溾攢鈹€ tools.php          # 宸ュ叿搴?鈹溾攢鈹€ tool.php           # 宸ュ叿璇︽儏椤?鈹溾攢鈹€ news.php           # AI璧勮
-鈹溾攢鈹€ submit.php         #鎻愪氦宸ュ叿
+鈹溾攢鈹€ submit.php         # 鎻愪氦宸ュ叿
 鈹溾攢鈹€ hot.php            # 鐑棬宸ュ叿
 鈹溾攢鈹€ weekly.php         # AI宸ュ叿鍛ㄥ垔
 鈹溾攢鈹€ admin/             # 鍚庡彴绠＄悊
-鈹溾攢鈹€ includes/          # 鏍稿績鍑芥暟搴?鈹溾攢鈹€ templates/         # 妯℃澘鏂囦欢
-鈹斺攢鈹€ assets/            # 闈欐€佽祫婧?\\\
+鈹溾攢鈹€ includes/           # 鏍稿績鍑芥暟搴?鈹溾攢鈹€ templates/          # 妯℃澘鏂囦欢
+鈹斺攢鈹€ assets/            # 闈欐€佽祫婧?`
 
 ## 鍏充簬
 
