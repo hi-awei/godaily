@@ -1,37 +1,49 @@
-# GoDaily - 姣忔棩AI宸ュ叿瀵艰埅
+# GoDaily - 每日AI工具导航
 
-> 鍙戠幇鍜屾暣鐞嗘渶浼樿川鐨凙I宸ュ叿锛屼负鐢ㄦ埛鎻愪緵鍏ㄩ潰鐨凙I宸ュ叿瀵艰埅鏈嶅姟銆?
-**瀹樼綉锛?* [https://993899.com](https://993899.com)
+> 发现和整理最优质的AI工具，为用户提供全面的AI工具导航服务。
 
-## 鍔熻兘鐗圭偣
+**官网：** [https://993899.com](https://993899.com)
 
-- 鏀跺綍300+浼樿川AI宸ュ叿锛岃鐩栧ぇ妯″瀷銆佸浘鍍忋€佽棰戙€侀煶棰戙€佺紪绋嬬瓑18涓垎绫?- 姣忔棩鏇存柊AI璧勮锛屾敮鎸丷SS璁㈤槄
-- 鍝嶅簲寮忚璁★紝绉诲姩绔弸濂?- SEO浼樺寲锛坰itemap銆丣SON-LD銆丷SS锛?- Google AdSense 骞垮憡鍙樼幇
+## 功能特点
 
-## 鎶€鏈爤
+- 收录300+优质AI工具，覆盖大模型、图像、视频、音频、编程等18个分类
+- 每日更新AI资讯，支持RSS订阅
+- 响应式设计，移动端友好
+- SEO优化（sitemap、JSON-LD、RSS）
+- Google AdSense 广告变现
+
+## 技术栈
 
 - PHP 8.2 + MySQL
-- 鍝嶅簲寮廋SS锛屾棤闇€妗嗘灦
-- 寮€婧愬彲閮ㄧ讲
+- 响应式CSS，无需框架
+- 开源可部署
 
-## 蹇€熼儴缃?
-1. 閰嶇疆 config.php 涓殑鏁版嵁搴撲俊鎭?2. 涓婁紶鍒癙HP涓绘満鍗冲彲杩愯
+## 快速部署
 
-## 鐩綍缁撴瀯
+1. 配置 `config.php` 中的数据库信息
+2. 上传到PHP主机即可运行
 
-`
+## 目录结构
+
+```
 .
-鈹溾攢鈹€ index.php          # 棣栭〉
-鈹溾攢鈹€ tools.php          # 宸ュ叿搴?鈹溾攢鈹€ tool.php           # 宸ュ叿璇︽儏椤?鈹溾攢鈹€ news.php           # AI璧勮
-鈹溾攢鈹€ submit.php         # 鎻愪氦宸ュ叿
-鈹溾攢鈹€ hot.php            # 鐑棬宸ュ叿
-鈹溾攢鈹€ weekly.php         # AI宸ュ叿鍛ㄥ垔
-鈹溾攢鈹€ admin/             # 鍚庡彴绠＄悊
-鈹溾攢鈹€ includes/           # 鏍稿績鍑芥暟搴?鈹溾攢鈹€ templates/          # 妯℃澘鏂囦欢
-鈹斺攢鈹€ assets/            # 闈欐€佽祫婧?`
+├── index.php          # 首页
+├── tools.php          # 工具库
+├── tool.php           # 工具详情页
+├── news.php           # AI资讯
+├── submit.php         # 提交工具
+├── hot.php            # 热门工具
+├── weekly.php         # AI工具周刊
+├── admin/             # 后台管理
+├── includes/           # 核心函数库
+├── templates/         # 模板文件
+└── assets/            # 静态资源
+```
 
-## 鍏充簬
+## 关于
 
-鏈」鐩敱 [QClaw](https://github.com/QClaw) AI Agent 鑷姩鍖栬繍缁淬€?
-## 寮€婧愯鍙?
+本项目由 [QClaw](https://github.com/QClaw) AI Agent 自动化运维。
+
+## 开源许可
+
 MIT License
