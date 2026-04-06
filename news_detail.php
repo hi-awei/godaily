@@ -1,38 +1,68 @@
 <?php
-// Minimal Markdown to HTML renderer
 function renderMarkdown($text) {
     if (!$text) return '';
     $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-    // Headings
-    $text = preg_replace('/^### (.+)$/m', '<h3>$1</h3>', $text);
-    $text = preg_replace('/^## (.+)$/m', '<h2>$1</h2>', $text);
-    $text = preg_replace('/^# (.+)$/m', '<h1>$1</h1>', $text);
-    // Bold/Italic
-    $text = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $text);
-    $text = preg_replace('/\*(.+?)\*/', '<em>$1</em>', $text);
-    // Unordered lists
-    $text = preg_replace('/^- (.+)$/m', '<li>$1</li>', $text);
-    $text = preg_replace('/(<li>.*<\/li>)\n(<li>)/', '$1$2', $text);
-    // Wrap consecutive <li> in <ul>
-    $text = preg_replace('/(<li>)/', '<ul>$1', $text);
-    $text = preg_replace('/(<\/li>)(?!.*<\/ul>)/', '$1</ul>', $text);
-    // Paragraphs
     $lines = explode("\n", $text);
     $out = [];
     $in_p = false;
+    $table_buf = [];
     foreach ($lines as $line) {
+        $line = rtrim($line);
+        if (preg_match('/^\|.+\|$/', $line)) {
+            if (preg_match('/^\|[-: |]+\|$/', $line)) continue;
+            $cells = array_filter(array_map('trim', explode('|', $line)));
+            if (empty($cells) || preg_match('/^-+$/', $cells[0])) continue;
+            if ($in_p) { $out[] = '</p>'; $in_p = false; }
+            $table_buf[] = $cells;
+            continue;
+        }
+        if (!empty($table_buf)) {
+            $thead = ''; $tbody = ''; $first = true;
+            foreach ($table_buf as $row) {
+                if ($first) { $thead = '<tr><th>'.implode('</th><th>',$row).'</th></tr>'; }
+                else { $tbody .= '<tr><td>'.implode('</td><td>',$row).'</td></tr>'; }
+                $first = false;
+            }
+            $out[] = '<div class="md-table-wrap"><table class="md-table"><thead>'.$thead.'</thead><tbody>'.$tbody.'</tbody></table></div>';
+            $table_buf = [];
+        }
         $line = trim($line);
         if ($line === '') { if ($in_p) { $out[] = '</p>'; $in_p = false; } continue; }
-        if (preg_match('/^<h[1-3]>/', $line) || preg_match('/^<ul>/', $line) || preg_match('/^<\/ul>/', $line)) {
+        if (preg_match('/^### (.+)$/', $line, $m)) {
             if ($in_p) { $out[] = '</p>'; $in_p = false; }
-            $out[] = $line;
-        } else {
-            if (!$in_p) { $out[] = '<p>'; $in_p = true; }
-            $out[] = $line;
+            $out[] = '<h3>'.$m[1].'</h3>'; continue;
         }
+        if (preg_match('/^## (.+)$/', $line, $m)) {
+            if ($in_p) { $out[] = '</p>'; $in_p = false; }
+            $out[] = '<h2>'.$m[1].'</h2>'; continue;
+        }
+        if (preg_match('/^# (.+)$/', $line, $m)) {
+            if ($in_p) { $out[] = '</p>'; $in_p = false; }
+            $out[] = '<h1>'.$m[1].'</h1>'; continue;
+        }
+        if (preg_match('/^[\-\*] (.+)$/', $line, $m)) {
+            if ($in_p) { $out[] = '</p>'; $in_p = false; }
+            $out[] = '<li>'.$m[1].'</li>'; continue;
+        }
+        $line = preg_replace('/**(.+?)**/', '<strong>$1</strong>', $line);
+        $line = preg_replace('/*(.+?)*/', '<em>$1</em>', $line);
+        if (!$in_p) { $out[] = '<p>'; $in_p = true; }
+        $out[] = $line;
     }
     if ($in_p) $out[] = '</p>';
-    return implode("\n", $out);
+    if (!empty($table_buf)) {
+        $thead = ''; $tbody = ''; $first = true;
+        foreach ($table_buf as $row) {
+            if ($first) { $thead = '<tr><th>'.implode('</th><th>',$row).'</th></tr>'; }
+            else { $tbody .= '<tr><td>'.implode('</td><td>',$row).'</td></tr>'; }
+            $first = false;
+        }
+        $out[] = '<div class="md-table-wrap"><table class="md-table"><thead>'.$thead.'</thead><tbody>'.$tbody.'</tbody></table></div>';
+    }
+    $result = implode("\n", $out);
+    $result = preg_replace('/(<li>)/', '<ul>$1', $result);
+    $result = preg_replace('/(<\/li>)(?![\s\S]*<\/ul>)/', '$1</ul>', $result);
+    return $result;
 }
 
 try {
@@ -113,7 +143,6 @@ $currentPage = 'news';
                 </div>
             <?php endif; ?>
 
-            <!-- Share buttons -->
             <div class="share-section">
                 <span style="font-size:13px;color:#666;">分享：</span>
                 <a href="https://service.weibo.com/share/share.php?url=<?= urlencode('https://www.993899.com/news.php?id='.$news['id']) ?>&title=<?= urlencode($news['title']) ?>" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:#e6162d;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;">微博</a>
@@ -187,6 +216,12 @@ $currentPage = 'news';
 .news-detail-body em{font-style:italic;color:#555}
 .news-detail-body ul{margin:12px 0;padding-left:24px}
 .news-detail-body li{margin-bottom:6px}
+.news-detail-body .md-table-wrap{overflow-x:auto;margin:16px 0;border-radius:8px;border:1px solid #e5e7eb}
+.news-detail-body .md-table{width:100%;border-collapse:collapse;font-size:14px}
+.news-detail-body .md-table th{background:#f9fafb;padding:10px 14px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;white-space:nowrap}
+.news-detail-body .md-table td{padding:10px 14px;border-bottom:1px solid #f3f4f6;color:#4b5563}
+.news-detail-body .md-table tr:last-child td{border-bottom:none}
+.news-detail-body .md-table tr:hover td{background:#f9fafb}
 .news-detail-source{margin-top:20px;padding-top:16px;border-top:1px solid #eee}
 .news-detail-source a{color:#4f46e5;font-size:14px}
 .news-sidebar{display:flex;flex-direction:column;gap:20px}
