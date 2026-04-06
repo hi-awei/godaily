@@ -1,4 +1,40 @@
 <?php
+// Minimal Markdown to HTML renderer
+function renderMarkdown($text) {
+    if (!$text) return '';
+    $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    // Headings
+    $text = preg_replace('/^### (.+)$/m', '<h3>$1</h3>', $text);
+    $text = preg_replace('/^## (.+)$/m', '<h2>$1</h2>', $text);
+    $text = preg_replace('/^# (.+)$/m', '<h1>$1</h1>', $text);
+    // Bold/Italic
+    $text = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $text);
+    $text = preg_replace('/\*(.+?)\*/', '<em>$1</em>', $text);
+    // Unordered lists
+    $text = preg_replace('/^- (.+)$/m', '<li>$1</li>', $text);
+    $text = preg_replace('/(<li>.*<\/li>)\n(<li>)/', '$1$2', $text);
+    // Wrap consecutive <li> in <ul>
+    $text = preg_replace('/(<li>)/', '<ul>$1', $text);
+    $text = preg_replace('/(<\/li>)(?!.*<\/ul>)/', '$1</ul>', $text);
+    // Paragraphs
+    $lines = explode("\n", $text);
+    $out = [];
+    $in_p = false;
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line === '') { if ($in_p) { $out[] = '</p>'; $in_p = false; } continue; }
+        if (preg_match('/^<h[1-3]>/', $line) || preg_match('/^<ul>/', $line) || preg_match('/^<\/ul>/', $line)) {
+            if ($in_p) { $out[] = '</p>'; $in_p = false; }
+            $out[] = $line;
+        } else {
+            if (!$in_p) { $out[] = '<p>'; $in_p = true; }
+            $out[] = $line;
+        }
+    }
+    if ($in_p) $out[] = '</p>';
+    return implode("\n", $out);
+}
+
 try {
     $pdo = new PDO("mysql:host=localhost;dbname=web01_com;charset=utf8mb4", "web01_com", "3FT7Ppatfp19XbAh");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -65,9 +101,9 @@ $currentPage = 'news';
             </div>
             <?php endif; ?>
             <?php if ($news['content']): ?>
-                <div class="news-detail-body"><?= $news['content'] ?></div>
+                <div class="news-detail-body"><?= renderMarkdown($news['content']) ?></div>
             <?php elseif ($news['summary']): ?>
-                <div class="news-detail-body"><p><?= nl2br(htmlspecialchars($news['summary'], ENT_QUOTES, 'UTF-8')) ?></p></div>
+                <div class="news-detail-body"><?= renderMarkdown($news['summary']) ?></div>
             <?php else: ?>
                 <div class="news-detail-body"><p>内容待补充</p></div>
             <?php endif; ?>
@@ -82,7 +118,7 @@ $currentPage = 'news';
                 <span style="font-size:13px;color:#666;">分享：</span>
                 <a href="https://service.weibo.com/share/share.php?url=<?= urlencode('https://www.993899.com/news.php?id='.$news['id']) ?>&title=<?= urlencode($news['title']) ?>" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:#e6162d;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;">微博</a>
                 <a href="https://twitter.com/intent/tweet?url=<?= urlencode('https://www.993899.com/news.php?id='.$news['id']) ?>&text=<?= urlencode($news['title']) ?>" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:#1da1f2;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;">Twitter/X</a>
-                <a href="javascript:void(0)" onclick="navigator.clipboard.writeText(location.href);this.textContent='Copied!';setTimeout(function(){this.textContent='Copy Link'},2000);" style="display:inline-block;padding:6px 14px;background:#555;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;cursor:pointer;">复制链接</a>
+                <a href="javascript:void(0)" onclick="navigator.clipboard.writeText(location.href);this.textContent='已复制!';setTimeout(function(){this.textContent='复制链接'},2000);" style="display:inline-block;padding:6px 14px;background:#555;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;cursor:pointer;">复制链接</a>
             </div>
         </article>
 
@@ -145,13 +181,17 @@ $currentPage = 'news';
 .news-detail-image img{width:100%;height:auto;display:block}
 .news-detail-body{font-size:15px;line-height:1.8;color:#333}
 .news-detail-body p{margin-bottom:16px}
-.news-detail-body h3{font-size:18px;margin:24px 0 12px}
+.news-detail-body h2{font-size:20px;font-weight:700;margin:28px 0 12px;border-left:4px solid #4f46e5;padding-left:12px}
+.news-detail-body h3{font-size:17px;font-weight:700;margin:22px 0 10px}
+.news-detail-body strong{font-weight:700;color:#222}
+.news-detail-body em{font-style:italic;color:#555}
+.news-detail-body ul{margin:12px 0;padding-left:24px}
+.news-detail-body li{margin-bottom:6px}
 .news-detail-source{margin-top:20px;padding-top:16px;border-top:1px solid #eee}
 .news-detail-source a{color:#4f46e5;font-size:14px}
 .news-sidebar{display:flex;flex-direction:column;gap:20px}
 .sidebar-section{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:20px}
 .sidebar-title{font-size:15px;font-weight:700;margin-bottom:14px}
-.sidebar-tools{display:flex;flex-direction:column;gap:8px}
 .sidebar-tool-card{display:block;padding:10px 12px;background:#f9fafb;border-radius:6px;border:1px solid transparent;transition:0.2s;text-decoration:none}
 .sidebar-tool-card:hover{border-color:#4f46e5;transform:translateX(4px)}
 .tool-name{display:block;font-size:13px;font-weight:600;margin-bottom:2px;color:#333}

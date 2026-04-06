@@ -13,7 +13,7 @@ $jsonld = jsonld_homepage();
 
 try {
     $db = db();
-    $featuredTools = $db->query("SELECT * FROM tools WHERE featured=1 AND status=1 AND icon != '' AND icon IS NOT NULL ORDER BY vote_count DESC LIMIT 12")->fetchAll();
+    $featuredTools = $db->query("SELECT * FROM tools WHERE status=1 AND icon IS NOT NULL AND icon != '' ORDER BY featured DESC, vote_count DESC LIMIT 12")->fetchAll();
     $newTools = $db->query("SELECT * FROM tools WHERE status=1 AND category != 'ai-research' ORDER BY created_at DESC LIMIT 8")->fetchAll();
     $hotNews = $db->query("SELECT * FROM news WHERE status=1 ORDER BY is_hot DESC, published_at DESC LIMIT 5")->fetchAll();
     $categoryStats = $db->query("SELECT category, COUNT(*) as cnt FROM tools WHERE status=1 GROUP BY category ORDER BY cnt DESC")->fetchAll();
