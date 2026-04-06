@@ -56,13 +56,6 @@ require_once 'templates/header.php';
     </div>
 </section>
 
-<!-- 横幅广告 -->
-<section style="padding:16px 0;text-align:center;background:#f8fafc;">
-    <div class="container">
-        <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4485249374604824" data-ad-slot="" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    </div>
-</section>
-
 <!-- Featured Tools -->
 <section class="section">
     <div class="container">
