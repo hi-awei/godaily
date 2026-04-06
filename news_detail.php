@@ -51,12 +51,12 @@ $currentPage = 'news';
     <div class="news-layout">
         <article class="news-detail">
             <div class="news-detail-header">
-                <a href="news.php" class="back-link">&larr; Back to List</a>
+                <a href="news.php" class="back-link">&larr; 返回列表</a>
                 <h1 class="news-detail-title"><?= $pageTitle ?></h1>
                 <div class="news-detail-meta">
-                    <span>Date: <?= date('Y-m-d', strtotime($news['published_at'] ?? 'now')) ?></span>
-                    <?php if ($news['source']): ?><span>Source: <?= htmlspecialchars($news['source'], ENT_QUOTES, 'UTF-8') ?></span><?php endif; ?>
-                    <span>Views: <?= number_format($news['view_count'] ?? 0) ?></span>
+                    <span>发布日期：<?= date('Y-m-d', strtotime($news['published_at'] ?? 'now')) ?></span>
+                    <?php if ($news['source']): ?><span>来源：<?= htmlspecialchars($news['source'], ENT_QUOTES, 'UTF-8') ?></span><?php endif; ?>
+                    <span>阅读：<?= number_format($news['view_count'] ?? 0) ?></span>
                 </div>
             </div>
             <?php if ($news['image']): ?>
@@ -69,27 +69,27 @@ $currentPage = 'news';
             <?php elseif ($news['summary']): ?>
                 <div class="news-detail-body"><p><?= nl2br(htmlspecialchars($news['summary'], ENT_QUOTES, 'UTF-8')) ?></p></div>
             <?php else: ?>
-                <div class="news-detail-body"><p>Content coming soon</p></div>
+                <div class="news-detail-body"><p>内容待补充</p></div>
             <?php endif; ?>
             <?php if ($news['source_url']): ?>
                 <div class="news-detail-source">
-                    <a href="<?= htmlspecialchars($news['source_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">Read Original</a>
+                    <a href="<?= htmlspecialchars($news['source_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">阅读原文</a>
                 </div>
             <?php endif; ?>
 
             <!-- Share buttons -->
             <div class="share-section">
-                <span style="font-size:13px;color:#666;">Share: </span>
-                <a href="https://service.weibo.com/share/share.php?url=<?= urlencode('https://www.993899.com/news.php?id='.$news['id']) ?>&title=<?= urlencode($news['title']) ?>" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:#e6162d;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;">Weibo</a>
+                <span style="font-size:13px;color:#666;">分享：</span>
+                <a href="https://service.weibo.com/share/share.php?url=<?= urlencode('https://www.993899.com/news.php?id='.$news['id']) ?>&title=<?= urlencode($news['title']) ?>" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:#e6162d;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;">微博</a>
                 <a href="https://twitter.com/intent/tweet?url=<?= urlencode('https://www.993899.com/news.php?id='.$news['id']) ?>&text=<?= urlencode($news['title']) ?>" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:#1da1f2;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;">Twitter/X</a>
-                <a href="javascript:void(0)" onclick="navigator.clipboard.writeText(location.href);this.textContent='Copied!';setTimeout(function(){this.textContent='Copy Link'},2000);" style="display:inline-block;padding:6px 14px;background:#555;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;cursor:pointer;">Copy Link</a>
+                <a href="javascript:void(0)" onclick="navigator.clipboard.writeText(location.href);this.textContent='Copied!';setTimeout(function(){this.textContent='Copy Link'},2000);" style="display:inline-block;padding:6px 14px;background:#555;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;cursor:pointer;">复制链接</a>
             </div>
         </article>
 
         <aside class="news-sidebar">
             <?php if (!empty($related_tools)): ?>
             <div class="sidebar-section">
-                <h3 class="sidebar-title">Hot Tools</h3>
+                <h3 class="sidebar-title">热门工具</h3>
                 <?php foreach ($related_tools as $t): ?>
                     <a href="tool.php?slug=<?= urlencode($t['slug']) ?>" class="sidebar-tool-card" target="_blank">
                         <span class="tool-name"><?= htmlspecialchars($t['name'], ENT_QUOTES, 'UTF-8') ?></span>
@@ -101,7 +101,7 @@ $currentPage = 'news';
 
             <?php if (!empty($popular)): ?>
             <div class="sidebar-section">
-                <h3 class="sidebar-title">Popular News</h3>
+                <h3 class="sidebar-title">热门资讯</h3>
                 <ul class="sidebar-list">
                 <?php foreach ($popular as $p): ?>
                     <li><a href="news.php?id=<?= intval($p['id']) ?>" target="_blank"><?= htmlspecialchars(mb_substr($p['title'], 0, 40), ENT_QUOTES, 'UTF-8') ?><?= mb_strlen($p['title']) > 40 ? '...' : '' ?></a></li>
@@ -112,7 +112,7 @@ $currentPage = 'news';
 
             <?php if (!empty($recent)): ?>
             <div class="sidebar-section">
-                <h3 class="sidebar-title">Latest News</h3>
+                <h3 class="sidebar-title">最新资讯</h3>
                 <ul class="sidebar-list">
                 <?php foreach ($recent as $r): ?>
                     <li><a href="news.php?id=<?= intval($r['id']) ?>" target="_blank"><?= htmlspecialchars(mb_substr($r['title'], 0, 40), ENT_QUOTES, 'UTF-8') ?><?= mb_strlen($r['title']) > 40 ? '...' : '' ?></a></li>
@@ -122,11 +122,11 @@ $currentPage = 'news';
             <?php endif; ?>
 
             <div class="sidebar-section">
-                <h3 class="sidebar-title">Quick Links</h3>
+                <h3 class="sidebar-title">快速导航</h3>
                 <div class="sidebar-links">
-                    <a href="tools.php" class="sidebar-link-btn" target="_blank">All Tools</a>
-                    <a href="hot.php" class="sidebar-link-btn" target="_blank">Popular</a>
-                    <a href="submit.php" class="sidebar-link-btn" target="_blank">Submit Tool</a>
+                    <a href="tools.php" class="sidebar-link-btn" target="_blank">全部工具</a>
+                    <a href="hot.php" class="sidebar-link-btn" target="_blank">热门工具</a>
+                    <a href="submit.php" class="sidebar-link-btn" target="_blank">提交工具</a>
                 </div>
             </div>
         </aside>
