@@ -1,186 +1,132 @@
 <?php
-error_reporting(0);
-ini_set('display_errors', 0);
-require_once 'includes/db.php';
-require_once 'includes/functions.php';
-
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-if (!$id) { header('Location: news.php'); exit; }
-
 try {
-    $db = db();
-    $stmt = $db->prepare("SELECT * FROM news WHERE id=? AND status=1");
-    $stmt->execute([$id]);
-    $news = $stmt->fetch();
-    if (!$news) { header('Location: news.php'); exit; }
-    // Increment view count
-    $db->prepare("UPDATE news SET view_count=view_count+1 WHERE id=?")->execute([$id]);
-    
-    // Get popular news
-    $popular = $db->query("SELECT id, title, view_count FROM news WHERE status=1 ORDER BY view_count DESC LIMIT 5")->fetchAll();
-    
-    // Get recent news
-    $recent = $db->query("SELECT id, title, published_at FROM news WHERE status=1 ORDER BY published_at DESC LIMIT 5")->fetchAll();
-    
-    // Get related tools based on title keywords
-    $related_tools = [];
-    $title_lower = mb_strtolower($news['title'], 'UTF-8');
-    
-    // Define keyword to tool mapping
-    $keyword_map = [
-        'kimi' => 'kimi',
-        'midjourney' => 'midjourney',
-        'cursor' => 'cursor',
-        'chatgpt' => 'chatgpt',
-        'claude' => 'claude',
-        'gpt' => 'chatgpt',
-        'stable diffusion' => 'stable-diffusion',
-        'sd' => 'stable-diffusion',
-        '文心一言' => 'wenxinyiyan',
-        '通义' => 'tongyi',
-        '豆包' => 'doubao',
-        '秘塔' => 'misearch',
-        'perplexity' => 'perplexity',
-        'dall' => 'dalle',
-        'suno' => 'suno',
-        'runway' => 'runway',
-        '视频' => 'ai-video',
-        '图像' => 'ai-image',
-        '绘画' => 'ai-image',
-        '编程' => 'ai-code',
-        '代码' => 'ai-code',
-        '写作' => 'writing',
-        '设计' => 'ai-design',
-    ];
-    
-    $matched_slug = '';
-    foreach ($keyword_map as $keyword => $slug) {
-        if (strpos($title_lower, $keyword) !== false) {
-            $matched_slug = $slug;
-            break;
-        }
-    }
-    
-    if ($matched_slug) {
-        // Get the tool itself
-        $tool_stmt = $db->prepare("SELECT slug, name, tagline FROM tools WHERE slug=?");
-        $tool_stmt->execute([$matched_slug]);
-        $main_tool = $tool_stmt->fetch();
-        
-        // Get category for related tools
-        if ($main_tool) {
-            $cat_stmt = $db->prepare("SELECT category FROM tools WHERE slug=?");
-            $cat_stmt->execute([$matched_slug]);
-            $cat_row = $cat_stmt->fetch();
-            if ($cat_row) {
-                $related = $db->prepare("SELECT slug, name, tagline FROM tools WHERE category=? AND slug!=? LIMIT 4");
-                $related->execute([$cat_row['category'], $matched_slug]);
-                $related_tools = $related->fetchAll();
-                if ($main_tool) array_unshift($related_tools, $main_tool);
-            }
-        }
-    }
-    
-    // If no related tools found, show some popular tools
-    if (empty($related_tools)) {
-        $related_tools = $db->query("SELECT slug, name, tagline FROM tools ORDER BY view_count DESC LIMIT 5")->fetchAll();
-    }
-    
+    $pdo = new PDO("mysql:host=localhost;dbname=web01_com;charset=utf8mb4", "web01_com", "3FT7Ppatfp19XbAh");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (Exception $e) {
     header('Location: news.php'); exit;
 }
 
-$pageTitle = $news['title'];
-$currentPage = 'news';
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if (!$id) { header('Location: news.php'); exit; }
 
-require_once 'templates/header.php';
+$stmt = $pdo->prepare("SELECT * FROM news WHERE id=? AND status=1");
+$stmt->execute([$id]);
+$news = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$news) { header('Location: news.php'); exit; }
+
+$pdo->prepare("UPDATE news SET view_count=view_count+1 WHERE id=?")->execute([$id]);
+
+$stmt_pop = $pdo->prepare("SELECT id, title FROM news WHERE status=1 ORDER BY id DESC LIMIT 5");
+$stmt_pop->execute();
+$popular = $stmt_pop->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt_rec = $pdo->prepare("SELECT id, title FROM news WHERE status=1 ORDER BY published_at DESC LIMIT 5");
+$stmt_rec->execute();
+$recent = $stmt_rec->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt_t = $pdo->prepare("SELECT slug, name, tagline FROM tools WHERE status='published' ORDER BY id DESC LIMIT 5");
+$stmt_t->execute();
+$related_tools = $stmt_t->fetchAll(PDO::FETCH_ASSOC);
+
+$pageTitle = htmlspecialchars($news['title'], ENT_QUOTES, 'UTF-8');
+$currentPage = 'news';
 ?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $pageTitle ?> - GoDaily</title>
+    <meta name="description" content="<?= htmlspecialchars(mb_substr($news['summary'] ?? $news['title'], 0, 120), ENT_QUOTES, 'UTF-8') ?>">
+    <meta name="google-adsense-account" content="ca-pub-4485249374604824">
+    <link rel="canonical" href="https://www.993899.com/news.php?id=<?= intval($news['id']) ?>">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.php">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4485249374604824" crossorigin="anonymous"></script>
+</head>
+<body>
+<?php include 'templates/header.php'; ?>
 
 <div class="container">
     <div class="news-layout">
         <article class="news-detail">
             <div class="news-detail-header">
-                <a href="news.php" class="back-link">← 返回资讯列表</a>
-                <h1 class="news-detail-title"><?= clean($news['title']) ?></h1>
+                <a href="news.php" class="back-link">&larr; Back to List</a>
+                <h1 class="news-detail-title"><?= $pageTitle ?></h1>
                 <div class="news-detail-meta">
-                    <span>📅 <?= date('Y-m-d', strtotime($news['published_at'])) ?></span>
-                    <?php if ($news['source']): ?>
-                        <span>📰 <?= clean($news['source']) ?></span>
-                    <?php endif; ?>
-                    <span>👁️ <?= number_format($news['view_count'] ?? 0) ?> 阅读</span>
+                    <span>Date: <?= date('Y-m-d', strtotime($news['published_at'] ?? 'now')) ?></span>
+                    <?php if ($news['source']): ?><span>Source: <?= htmlspecialchars($news['source'], ENT_QUOTES, 'UTF-8') ?></span><?php endif; ?>
+                    <span>Views: <?= number_format($news['view_count'] ?? 0) ?></span>
                 </div>
             </div>
-
             <?php if ($news['image']): ?>
-                <div class="news-detail-image">
-                    <img src="<?= clean($news['image']) ?>" alt="<?= clean($news['title']) ?>">
-                </div>
+            <div class="news-detail-image">
+                <img src="<?= htmlspecialchars($news['image'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= $pageTitle ?>">
+            </div>
             <?php endif; ?>
-
             <?php if ($news['content']): ?>
-                <div class="news-detail-body">
-                    <?= $news['content'] ?>
-                </div>
+                <div class="news-detail-body"><?= $news['content'] ?></div>
             <?php elseif ($news['summary']): ?>
-                <div class="news-detail-body">
-                    <p><?= nl2br(clean($news['summary'])) ?></p>
-                </div>
+                <div class="news-detail-body"><p><?= nl2br(htmlspecialchars($news['summary'], ENT_QUOTES, 'UTF-8')) ?></p></div>
             <?php else: ?>
-                <div class="news-detail-body empty-content">
-                    <p>暂无正文内容</p>
-                </div>
+                <div class="news-detail-body"><p>Content coming soon</p></div>
             <?php endif; ?>
-
             <?php if ($news['source_url']): ?>
                 <div class="news-detail-source">
-                    <a href="<?= clean($news['source_url']) ?>" target="_blank" rel="noopener">🔗 查看原文</a>
+                    <a href="<?= htmlspecialchars($news['source_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">Read Original</a>
                 </div>
             <?php endif; ?>
+
+            <!-- Share buttons -->
+            <div class="share-section">
+                <span style="font-size:13px;color:#666;">Share: </span>
+                <a href="https://service.weibo.com/share/share.php?url=<?= urlencode('https://www.993899.com/news.php?id='.$news['id']) ?>&title=<?= urlencode($news['title']) ?>" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:#e6162d;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;">Weibo</a>
+                <a href="https://twitter.com/intent/tweet?url=<?= urlencode('https://www.993899.com/news.php?id='.$news['id']) ?>&text=<?= urlencode($news['title']) ?>" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:#1da1f2;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;">Twitter/X</a>
+                <a href="javascript:void(0)" onclick="navigator.clipboard.writeText(location.href);this.textContent='Copied!';setTimeout(function(){this.textContent='Copy Link'},2000);" style="display:inline-block;padding:6px 14px;background:#555;color:#fff;border-radius:4px;font-size:13px;text-decoration:none;cursor:pointer;">Copy Link</a>
+            </div>
         </article>
-        
+
         <aside class="news-sidebar">
-            <!-- Related Tools -->
             <?php if (!empty($related_tools)): ?>
             <div class="sidebar-section">
-                <h3 class="sidebar-title">🔧 相关工具</h3>
-                <div class="sidebar-tools">
-                    <?php foreach ($related_tools as $tool): ?>
-                        <a href="tool.php?slug=<?= urlencode($tool['slug']) ?>" class="sidebar-tool-card" target="_blank">
-                            <span class="sidebar-tool-name"><?= clean($tool['name']) ?></span>
-                            <span class="sidebar-tool-tagline"><?= clean(mb_substr($tool['tagline'] ?? '', 0, 30)) ?></span>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
+                <h3 class="sidebar-title">Hot Tools</h3>
+                <?php foreach ($related_tools as $t): ?>
+                    <a href="tool.php?slug=<?= urlencode($t['slug']) ?>" class="sidebar-tool-card" target="_blank">
+                        <span class="tool-name"><?= htmlspecialchars($t['name'], ENT_QUOTES, 'UTF-8') ?></span>
+                        <span class="tool-tagline"><?= htmlspecialchars(mb_substr($t['tagline'] ?? '', 0, 30), ENT_QUOTES, 'UTF-8') ?></span>
+                    </a>
+                <?php endforeach; ?>
             </div>
             <?php endif; ?>
-            
-            <!-- Popular News -->
+
+            <?php if (!empty($popular)): ?>
             <div class="sidebar-section">
-                <h3 class="sidebar-title">🔥 热门资讯</h3>
+                <h3 class="sidebar-title">Popular News</h3>
                 <ul class="sidebar-list">
-                    <?php foreach ($popular as $item): ?>
-                        <li><a href="news_detail.php?id=<?= $item['id'] ?>" target="_blank"><?= clean(mb_substr($item['title'], 0, 25)) ?><?= mb_strlen($item['title']) > 25 ? '...' : '' ?></a></li>
-                    <?php endforeach; ?>
+                <?php foreach ($popular as $p): ?>
+                    <li><a href="news.php?id=<?= intval($p['id']) ?>" target="_blank"><?= htmlspecialchars(mb_substr($p['title'], 0, 40), ENT_QUOTES, 'UTF-8') ?><?= mb_strlen($p['title']) > 40 ? '...' : '' ?></a></li>
+                <?php endforeach; ?>
                 </ul>
             </div>
-            
-            <!-- Recent News -->
+            <?php endif; ?>
+
+            <?php if (!empty($recent)): ?>
             <div class="sidebar-section">
-                <h3 class="sidebar-title">📰 最新资讯</h3>
+                <h3 class="sidebar-title">Latest News</h3>
                 <ul class="sidebar-list">
-                    <?php foreach ($recent as $item): ?>
-                        <li><a href="news_detail.php?id=<?= $item['id'] ?>" target="_blank"><?= clean(mb_substr($item['title'], 0, 25)) ?><?= mb_strlen($item['title']) > 25 ? '...' : '' ?></a></li>
-                    <?php endforeach; ?>
+                <?php foreach ($recent as $r): ?>
+                    <li><a href="news.php?id=<?= intval($r['id']) ?>" target="_blank"><?= htmlspecialchars(mb_substr($r['title'], 0, 40), ENT_QUOTES, 'UTF-8') ?><?= mb_strlen($r['title']) > 40 ? '...' : '' ?></a></li>
+                <?php endforeach; ?>
                 </ul>
             </div>
-            
-            <!-- Quick Links -->
+            <?php endif; ?>
+
             <div class="sidebar-section">
-                <h3 class="sidebar-title">📂 快速导航</h3>
+                <h3 class="sidebar-title">Quick Links</h3>
                 <div class="sidebar-links">
-                    <a href="tools.php" class="sidebar-link-btn">🛠️ 工具库</a>
-                    <a href="hot.php" class="sidebar-link-btn">⭐ 热门工具</a>
-                    <a href="submit.php" class="sidebar-link-btn">➕ 提交工具</a>
+                    <a href="tools.php" class="sidebar-link-btn" target="_blank">All Tools</a>
+                    <a href="hot.php" class="sidebar-link-btn" target="_blank">Popular</a>
+                    <a href="submit.php" class="sidebar-link-btn" target="_blank">Submit Tool</a>
                 </div>
             </div>
         </aside>
@@ -188,56 +134,39 @@ require_once 'templates/header.php';
 </div>
 
 <style>
-.news-layout { display: grid; grid-template-columns: 1fr 300px; gap: 32px; margin: 32px auto; max-width: 1200px; }
-.news-detail { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 40px; }
-.back-link { display: inline-block; margin-bottom: 20px; font-size: 14px; color: var(--text-light); }
-.back-link:hover { color: var(--primary); }
-.news-detail-title { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
-.news-detail-meta { display: flex; gap: 20px; font-size: 14px; color: var(--text-light); margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-.news-detail-image { margin-bottom: 28px; border-radius: var(--radius-sm); overflow: hidden; }
-.news-detail-image img { width: 100%; display: block; }
-.news-detail-body { font-size: 16px; line-height: 2; color: var(--text); }
-.news-detail-body p { margin-bottom: 16px; }
-.news-detail-body h2 { font-size: 22px; margin: 28px 0 16px; }
-.news-detail-body h3 { font-size: 18px; margin: 24px 0 12px; }
-.news-detail-body img { max-width: 100%; border-radius: 8px; margin: 16px 0; }
-.news-detail-body a { color: var(--primary); }
-.news-detail-body blockquote { border-left: 4px solid var(--primary); padding: 12px 20px; margin: 16px 0; background: #f8fafc; border-radius: 0 8px 8px 0; color: var(--text-light); }
-.news-detail-body ul, .news-detail-body ol { padding-left: 24px; margin-bottom: 16px; }
-.news-detail-body li { margin-bottom: 8px; }
-.empty-content { text-align: center; padding: 40px; color: var(--text-light); }
-.news-detail-source { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
-.news-detail-source a { font-size: 15px; color: var(--primary); font-weight: 600; }
-.news-detail-source a:hover { color: var(--primary-dark); }
-
-/* Sidebar Styles */
-.news-sidebar { display: flex; flex-direction: column; gap: 24px; }
-.sidebar-section { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
-.sidebar-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--text); }
-.sidebar-tools { display: flex; flex-direction: column; gap: 10px; }
-.sidebar-tool-card { display: block; padding: 12px; border-radius: var(--radius-sm); background: var(--bg); transition: 0.2s; border: 1px solid transparent; }
-.sidebar-tool-card:hover { border-color: var(--primary); transform: translateX(4px); }
-.sidebar-tool-name { display: block; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.sidebar-tool-tagline { display: block; font-size: 12px; color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sidebar-list { list-style: none; }
-.sidebar-list li { margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-.sidebar-list li:last-child { border-bottom: none; }
-.sidebar-list a { font-size: 13px; color: var(--text); line-height: 1.5; display: block; }
-.sidebar-list a:hover { color: var(--primary); }
-.sidebar-links { display: flex; flex-direction: column; gap: 8px; }
-.sidebar-link-btn { display: block; padding: 10px 14px; background: var(--bg); border-radius: var(--radius-sm); font-size: 13px; color: var(--text); text-align: center; transition: 0.2s; }
-.sidebar-link-btn:hover { background: var(--primary); color: white; }
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .news-layout { grid-template-columns: 1fr; }
-    .news-sidebar { order: 2; }
-}
-@media (max-width: 768px) {
-    .news-detail { padding: 24px 16px; }
-    .news-detail-title { font-size: 22px; }
-    .news-detail-meta { gap: 12px; }
-}
+.news-layout{display:grid;grid-template-columns:1fr 300px;gap:32px;max-width:1200px;margin:0 auto;padding:32px 16px}
+.news-detail{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:32px}
+.news-detail-header{margin-bottom:24px;border-bottom:1px solid #eee;padding-bottom:20px}
+.back-link{font-size:14px;color:#4f46e5;text-decoration:none;display:inline-block;margin-bottom:12px}
+.back-link:hover{text-decoration:underline}
+.news-detail-title{font-size:26px;font-weight:700;line-height:1.4;margin-bottom:12px}
+.news-detail-meta{display:flex;gap:16px;font-size:13px;color:#888;flex-wrap:wrap}
+.news-detail-image{margin:20px 0;border-radius:8px;overflow:hidden}
+.news-detail-image img{width:100%;height:auto;display:block}
+.news-detail-body{font-size:15px;line-height:1.8;color:#333}
+.news-detail-body p{margin-bottom:16px}
+.news-detail-body h3{font-size:18px;margin:24px 0 12px}
+.news-detail-source{margin-top:20px;padding-top:16px;border-top:1px solid #eee}
+.news-detail-source a{color:#4f46e5;font-size:14px}
+.news-sidebar{display:flex;flex-direction:column;gap:20px}
+.sidebar-section{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:20px}
+.sidebar-title{font-size:15px;font-weight:700;margin-bottom:14px}
+.sidebar-tools{display:flex;flex-direction:column;gap:8px}
+.sidebar-tool-card{display:block;padding:10px 12px;background:#f9fafb;border-radius:6px;border:1px solid transparent;transition:0.2s;text-decoration:none}
+.sidebar-tool-card:hover{border-color:#4f46e5;transform:translateX(4px)}
+.tool-name{display:block;font-size:13px;font-weight:600;margin-bottom:2px;color:#333}
+.tool-tagline{display:block;font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-list{list-style:none;padding:0;margin:0}
+.sidebar-list li{margin-bottom:8px;border-bottom:1px solid #eee;padding-bottom:8px}
+.sidebar-list li:last-child{border-bottom:none}
+.sidebar-list a{font-size:13px;color:#333;line-height:1.5;display:block}
+.sidebar-list a:hover{color:#4f46e5}
+.sidebar-links{display:flex;flex-direction:column;gap:8px}
+.sidebar-link-btn{display:block;padding:10px 14px;background:#f9fafb;border-radius:6px;font-size:13px;text-align:center;transition:0.2s;color:#333;text-decoration:none}
+.sidebar-link-btn:hover{background:#4f46e5;color:#fff}
+.share-section{margin:24px 0;padding:16px 0;border-top:1px solid #eee;border-bottom:1px solid #eee;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+@media(max-width:1024px){.news-layout{grid-template-columns:1fr}}
+@media(max-width:768px){.news-detail{padding:20px 16px}.news-detail-title{font-size:20px}}
 </style>
 
-<?php require_once 'templates/footer.php'; ?>
+<?php include 'templates/footer.php'; ?>
