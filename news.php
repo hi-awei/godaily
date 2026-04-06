@@ -46,7 +46,7 @@ require_once 'templates/header.php';
                     <?php endif; ?>
                     <div class="news-body">
                         <h2 class="news-title">
-                            <a href="news_detail.php?id=<?php echo $item['id']; ?>"><?php echo clean($item['title']); ?></a>
+                            <a href="news_detail.php?id=<?php echo $item['id']; ?>" target="_blank" rel="noopener"><?php echo clean($item['title']); ?></a>
                         </h2>
                         <?php if ($item['summary']): ?>
                             <p class="news-summary"><?php echo clean($item['summary']); ?></p>

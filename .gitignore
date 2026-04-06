@@ -1,14 +1,64 @@
-﻿admin/
+admin/
 *.sql
 *.json
 *.log
 *.txt
 *.ps1
-*.js
 *.sh
 *.csv
+*.html
 config.php
 setup.php
 .htaccess
 .env
 .DS_Store
+
+# Exclude all non-core PHP scripts
+# Only whitelist: index.php, tools.php, tool.php, news.php, news_detail.php,
+# hot.php, weekly.php, submit.php, api.php, rss.php, sitemap.php, privacy.php,
+# baidu_push.php, bing_push.php, bookmarklet.html, weekly_update.php
+# Everything in includes/ and templates/ and assets/ is tracked
+
+# Temporary/debug/migration scripts (not core)
+add_*.php
+aidh_*.php
+batch*.php
+big_cleanup.php
+cat_stats.php
+check_*.php
+cleanup*.php
+collect_*.php
+compare_ids.php
+debug_*.php
+delete_*.php
+describe_*.php
+diag*.php
+dirtest.php
+do_*.php
+download.php
+exec_sql.php
+fill_empty.php
+final_update.php
+fix_*.php
+force_fix.php
+gen_*.php
+get_*.php
+indexnow_verify.php
+list_*.php
+merge_categories.php
+med_slugs.php
+news_stats.php
+publish_news.php
+publish_tool.php
+recategorize.php
+real_stats.php
+reset_ids.php
+run_*.php
+s[0-9].php
+stats*.php
+test_*.php
+update_*.php
+verify*.php
+weekly.html
+BingSiteAuth.xml
+sitemap.xml

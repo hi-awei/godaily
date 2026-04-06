@@ -13,7 +13,7 @@ $jsonld = jsonld_homepage();
 
 try {
     $db = db();
-    $featuredTools = $db->query("SELECT * FROM tools WHERE featured=1 AND status=1 ORDER BY vote_count DESC LIMIT 6")->fetchAll();
+    $featuredTools = $db->query("SELECT * FROM tools WHERE featured=1 AND status=1 AND icon != '' AND icon IS NOT NULL ORDER BY vote_count DESC LIMIT 12")->fetchAll();
     $newTools = $db->query("SELECT * FROM tools WHERE status=1 AND category != 'ai-research' ORDER BY created_at DESC LIMIT 8")->fetchAll();
     $hotNews = $db->query("SELECT * FROM news WHERE status=1 ORDER BY is_hot DESC, published_at DESC LIMIT 5")->fetchAll();
     $categoryStats = $db->query("SELECT category, COUNT(*) as cnt FROM tools WHERE status=1 GROUP BY category ORDER BY cnt DESC")->fetchAll();
@@ -70,7 +70,7 @@ require_once 'templates/header.php';
             <h2 class="section-title">⭐ 精选工具</h2>
             <a href="tools.php" class="section-more">查看全部 →</a>
         </div>
-        <div class="tools-grid">
+        <div class="featured-grid">
             <?php if (empty($featuredTools)): ?>
                 <div class="coming-soon"><p>暂无精选工具</p></div>
             <?php else: foreach ($featuredTools as $tool): ?>
@@ -84,7 +84,7 @@ require_once 'templates/header.php';
                         <?php endif; ?>
                     </div>
                     <div class="tool-info">
-                        <h3 class="tool-name"><a href="tool.php?slug=<?= $tool['slug'] ?>"><?= clean($tool['name']) ?></a></h3>
+                        <h3 class="tool-name"><a href="tool.php?slug=<?= $tool['slug'] ?>" target="_blank" rel="noopener"><?= clean($tool['name']) ?></a></h3>
                         <p class="tool-tagline"><?= clean($tool['tagline']) ?></p>
                         <div class="tool-meta">
                             <?php 
@@ -138,7 +138,7 @@ require_once 'templates/header.php';
                                 <?php endif; ?>
                             </div>
                             <div class="latest-info">
-                                <a href="tool.php?slug=<?= $tool['slug'] ?>" class="latest-name"><?= clean($tool['name']) ?></a>
+                                <a href="tool.php?slug=<?= $tool['slug'] ?>" target="_blank" rel="noopener" class="latest-name"><?= clean($tool['name']) ?></a>
                                 <span class="latest-tagline"><?= clean($tool['tagline']) ?></span>
                             </div>
                             <span class="latest-time"><?= time_ago($tool['created_at']) ?></span>
@@ -157,7 +157,7 @@ require_once 'templates/header.php';
                     <?php else: foreach ($hotNews as $news): ?>
                         <div class="news-item <?= $news['is_hot'] ? 'hot' : '' ?>">
                             <?php if ($news['is_hot']): ?><span class="hot-tag">🔥 热门</span><?php endif; ?>
-                            <a href="<?= clean($news['source_url']) ?>" target="_blank" class="news-title"><?= clean($news['title']) ?></a>
+                            <a href="news_detail.php?id=<?= $news['id'] ?>" target="_blank" rel="noopener" class="news-title"><?= clean($news['title']) ?></a>
                             <div class="news-meta">
                                 <span><?= clean($news['source']) ?></span>
                                 <span><?= time_ago($news['published_at']) ?></span>

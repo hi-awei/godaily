@@ -31,6 +31,16 @@ $cur = $currentPage ?? '';
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4485249374604824" crossorigin="anonymous"></script>
     <?= $jsonld ?? '' ?>
+    <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+     var hm = document.createElement("script");
+     hm.src = "https://hm.baidu.com/hm.js?2ff024957c3e9214e571475f0f0a9458";
+     var s = document.getElementsByTagName("script")[0]; 
+     s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
 </head>
 <body>
     <header class="site-header">

@@ -69,6 +69,10 @@ function category_color($cat) {
         'ai-chatbots' => '#6366f1', 'ai-writing' => '#ec4899', 'ai-image' => '#f59e0b',
         'ai-video' => '#ef4444', 'ai-audio' => '#10b981', 'ai-coding' => '#3b82f6',
         'ai-misc' => '#6b7280',
+        // 新增分类颜色
+        'ai-research' => '#a855f7', 'ai-office' => '#06b6d4', 'ai-chat' => '#6366f1',
+        'ai-design' => '#f97316', 'ai-learning' => '#14b8a6', 'ai-prompt' => '#ec4899',
+        'api' => '#84cc16',
     ][$cat] ?? '#6b7280';
 }
 
@@ -76,12 +80,16 @@ function category_name($cat) {
     return [
         'llm' => '大模型', 'image' => '图像', 'video' => '视频',
         'audio' => '音频', 'coding' => '编程', 'writing' => '写作',
-        'productivity' => '效率', 'design' => '设计', 'marketing' => '营销',
+        'productivity' => '效率工具', 'design' => '设计', 'marketing' => '营销',
         'other' => '其他', 'chatbot' => '对话', 'search' => '搜索',
         'detector' => '检测', 'education' => '教育', 'academic' => '学术',
-        'ai-chatbots' => 'AI对话', 'ai-writing' => 'AI写作', 'ai-image' => 'AI图像',
+        'ai-chatbots' => 'AI对话', 'ai-writing' => 'AI写作', 'ai-image' => 'AI绘画',
         'ai-video' => 'AI视频', 'ai-audio' => 'AI音频', 'ai-coding' => 'AI编程',
         'ai-misc' => '其他',
+        // 新增分类
+        'ai-research' => '学术研究', 'ai-office' => 'AI办公', 'ai-chat' => 'AI对话',
+        'ai-design' => 'AI设计', 'ai-learning' => 'AI学习', 'ai-prompt' => '提示词',
+        'api' => 'API服务',
     ][$cat] ?? $cat;
 }
 

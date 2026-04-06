@@ -128,7 +128,7 @@ require_once 'templates/header.php';
                     </div>
                     <div class="tool-info">
                         <h3 class="tool-name">
-                            <a href="tool.php?slug=<?php echo $tool['slug']; ?>"><?php echo clean($tool['name']); ?></a>
+                            <a href="tool.php?slug=<?php echo $tool['slug']; ?>" target="_blank" rel="noopener"><?php echo clean($tool['name']); ?></a>
                         </h3>
                         <p class="tool-tagline"><?php echo clean($tool['tagline']); ?></p>
                         <div class="tool-meta">
