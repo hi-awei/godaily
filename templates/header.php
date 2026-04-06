@@ -47,7 +47,7 @@ $cur = $currentPage ?? '';
         <div class="container header-inner">
             <a href="<?= $siteUrl ?>/index.php" class="logo">
                 <span class="logo-icon">🚀</span>
-                <span class="logo-text">GoDaily</span>
+                <span class="logo-text">轻松一百</span>
             </a>
             <nav class="main-nav">
                 <a href="<?= $siteUrl ?>/index.php" class="<?= $cur === 'home' ? 'active' : '' ?>">首页</a>

@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; <?= date('Y') ?> GoDaily - 每日AI工具导航. All rights reserved.</p>
+                <p>&copy; <?= date('Y') ?> GoDaily - 每日AI工具导航助你轻松一百. All rights reserved.</p>
                 <p>
                     精选AI工具，服务于创作者 &nbsp;|&nbsp;
                     <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow" style="color:rgba(255,255,255,0.5)">宁ICP备2024005816号</a>
