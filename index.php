@@ -6,7 +6,7 @@ require_once 'includes/ad.php';
 require_once 'includes/jsonld.php';
 
 $pageTitle = '首页';
-$pageDesc = 'GoDaily 每日更新，收录297+款精选AI工具，为你发现最值得使用的AI产品。涵盖AI对话、AI绘画、AI编程、大模型等分类。';
+$pageDesc = '每日更新，收录297+款精选AI工具，为你发现最值得使用的AI产品。涵盖AI对话、AI绘画、AI编程、大模型等分类。';
 $pageKeywords = 'AI工具,AI导航,人工智能工具,ChatGPT,Claude,Midjourney,AI工具导航';
 $currentPage = 'home';
 $jsonld = jsonld_homepage();

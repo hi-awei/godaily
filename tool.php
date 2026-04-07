@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 error_reporting(0);
 ini_set('display_errors', 0);
 require_once 'includes/db.php';
@@ -182,25 +182,32 @@ function copyLink() {
 </script>
 
 <style>
-.tool-detail-layout { display: grid; grid-template-columns: 1fr 280px; gap: 24px; margin: 24px auto; }
+.tool-detail-layout { display: grid; grid-template-columns: 1fr auto; gap: 24px; margin: 24px auto; }
 .tool-detail-main-col { min-width: 0; }
-.tool-detail-sidebar-new { display: flex; flex-direction: column; gap: 20px; }
-.tool-detail-sidebar-new .sidebar-section { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
-.tool-detail-sidebar-new .sidebar-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
-.tool-detail-sidebar-new .sidebar-list { list-style: none; }
-.tool-detail-sidebar-new .sidebar-list li { margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-.tool-detail-sidebar-new .sidebar-list li:last-child { border-bottom: none; }
-.tool-detail-sidebar-new .sidebar-list a { font-size: 13px; color: var(--text); line-height: 1.4; display: block; }
-.tool-detail-sidebar-new .sidebar-list a:hover { color: var(--primary); }
-.tool-detail-sidebar-new .sidebar-tools { display: flex; flex-direction: column; gap: 8px; }
-.tool-detail-sidebar-new .sidebar-tool-card { display: block; padding: 10px; border-radius: var(--radius-sm); background: var(--bg); transition: 0.2s; }
-.tool-detail-sidebar-new .sidebar-tool-card:hover { transform: translateX(4px); border-left: 3px solid var(--primary); }
-.tool-detail-sidebar-new .sidebar-tool-name { display: block; font-size: 13px; font-weight: 600; color: var(--text); }
-.tool-detail-sidebar-new .sidebar-tool-tagline { display: block; font-size: 11px; color: var(--text-light); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tool-detail-sidebar-new .sidebar-links { display: flex; flex-direction: column; gap: 8px; }
-.tool-detail-sidebar-new .sidebar-link-btn { display: block; padding: 10px 12px; background: var(--bg); border-radius: var(--radius-sm); font-size: 13px; color: var(--text); text-align: center; transition: 0.2s; }
-.tool-detail-sidebar-new .sidebar-link-btn:hover { background: var(--primary); color: white; }
-@media (max-width: 1024px) { .tool-detail-layout { grid-template-columns: 1fr; } .tool-detail-sidebar-new { order: 2; } }
+.tool-detail-sidebar { width: 280px; display: flex; flex-direction: column; gap: 20px; }
+.tool-detail-sidebar .sidebar-section { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
+.tool-detail-sidebar h3 { margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); } .tool-detail-sidebar .sidebar-title { margin-bottom: 12px; font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
+.tool-detail-sidebar .sidebar-list { list-style: none; }
+.tool-detail-sidebar .sidebar-list li { margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+.tool-detail-sidebar .sidebar-list li:last-child { border-bottom: none; }
+.tool-detail-sidebar .sidebar-list a { font-size: 13px; color: var(--text); line-height: 1.4; display: block; }
+.tool-detail-sidebar .sidebar-list a:hover { color: var(--primary); }
+.tool-detail-sidebar .sidebar-tools { display: flex; flex-direction: column; gap: 8px; }
+.tool-detail-sidebar .sidebar-tool-card { display: block; padding: 10px; border-radius: var(--radius-sm); background: var(--bg); transition: 0.2s; }
+.tool-detail-sidebar .sidebar-tool-card:hover { transform: translateX(4px); border-left: 3px solid var(--primary); }
+.tool-detail-sidebar .sidebar-tool-name { display: block; font-size: 13px; font-weight: 600; color: var(--text); }
+.tool-detail-sidebar .sidebar-tool-tagline { display: block; font-size: 11px; color: var(--text-light); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tool-detail-sidebar .sidebar-links { display: flex; flex-direction: column; gap: 8px; }
+.tool-detail-sidebar .sidebar-link-btn { display: block; padding: 10px 12px; background: var(--bg); border-radius: var(--radius-sm); font-size: 13px; color: var(--text); text-align: center; transition: 0.2s; }
+.tool-detail-sidebar .sidebar-link-btn:hover { background: var(--primary); color: white; }
+.related-logo { width: 40px; height: 40px; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.related-logo img { width: 100%; height: 100%; object-fit: contain; }
+@media (max-width: 1024px) { .tool-detail-layout { grid-template-columns: 1fr; } .tool-detail-sidebar { order: 2; } }
 </style>
 
 <?php require_once 'templates/footer.php'; ?>
+
+
+
+
+
