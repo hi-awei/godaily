@@ -13,14 +13,11 @@ try {
     $today = date('Y-m-d');
 
     $static = [
-        ['https://www.993899.com/index.php', '1.0', 'daily'],
+        ['https://www.993899.com/', '1.0', 'daily'],
         ['https://www.993899.com/tools.php', '0.9', 'daily'],
-        ['https://www.993899.com/news.php', '0.9', 'daily'],
-        ['https://www.993899.com/submit.php', '0.6', 'monthly'],
         ['https://www.993899.com/privacy.php', '0.3', 'yearly'],
-        ['https://www.993899.com/hot.php', '0.8', 'daily'],
-        ['https://www.993899.com/weekly.php', '0.8', 'weekly'],
-        ['https://www.993899.com/bookmarklet.html', '0.6', 'monthly'],
+        ['https://www.993899.com/about.php', '0.5', 'monthly'],
+        ['https://www.993899.com/contact.php', '0.4', 'monthly'],
     ];
     foreach ($static as $p) {
         echo "<url><loc>{$p[0]}</loc><priority>{$p[1]}</priority><changefreq>{$p[2]}</changefreq><lastmod>{$today}</lastmod></url>" . PHP_EOL;

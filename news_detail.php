@@ -1,6 +1,10 @@
 <?php
 function renderMarkdown($text) {
     if (!$text) return '';
+    // 检测内容是否已被HTML转义（如 &lt;h2&gt;），如果是则先解码
+    if (strpos($text, '&lt;') !== false && strpos($text, '&gt;') !== false) {
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
     $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
     $lines = explode("\n", $text);
     $out = [];
@@ -44,10 +48,10 @@ function renderMarkdown($text) {
             if ($in_p) { $out[] = '</p>'; $in_p = false; }
             $out[] = '<li>'.$m[1].'</li>'; continue;
         }
-        $line = preg_replace('/**(.+?)**/', '<strong>$1</strong>', $line);
-        $line = preg_replace('/*(.+?)*/', '<em>$1</em>', $line);
+        $line = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $line);
+        $line = preg_replace('/\*(.+?)\*/', '<em>$1</em>', $line);
         if (!$in_p) { $out[] = '<p>'; $in_p = true; }
-        $out[] = $line;
+        $out[] = ($line ?? '');
     }
     if ($in_p) $out[] = '</p>';
     if (!empty($table_buf)) {
@@ -131,9 +135,17 @@ $currentPage = 'news';
             </div>
             <?php endif; ?>
             <?php if ($news['content']): ?>
-                <div class="news-detail-body"><?= renderMarkdown($news['content']) ?></div>
+                <?php if (preg_match('/^<[hulop]/i', trim($news['content']))): ?>
+                    <div class="news-detail-body"><?= $news['content'] ?></div>
+                <?php else: ?>
+                    <div class="news-detail-body"><?= renderMarkdown($news['content']) ?></div>
+                <?php endif; ?>
             <?php elseif ($news['summary']): ?>
-                <div class="news-detail-body"><?= renderMarkdown($news['summary']) ?></div>
+                <?php if (preg_match('/^<[hulop]/i', trim($news['summary']))): ?>
+                    <div class="news-detail-body"><?= $news['summary'] ?></div>
+                <?php else: ?>
+                    <div class="news-detail-body"><?= renderMarkdown($news['summary']) ?></div>
+                <?php endif; ?>
             <?php else: ?>
                 <div class="news-detail-body"><p>内容待补充</p></div>
             <?php endif; ?>

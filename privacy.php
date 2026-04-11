@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/functions.php';
 ?>
 <!DOCTYPE html>
@@ -6,7 +6,7 @@ require_once 'includes/functions.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>隐私政策 - GoDaily - 每日AI工具导航</title>
+    <title>隐私政策 - AI导航 - 每日AI工具导航</title>
     <link rel="stylesheet" href="/assets/css/style.css">
     <meta name="robots" content="noindex, nofollow">
 </head>
@@ -15,7 +15,7 @@ require_once 'includes/functions.php';
         <div class="container header-inner">
             <a href="/" class="logo">
                 <span class="logo-icon">🚀</span>
-                <span class="logo-text">GoDaily</span>
+                <span class="logo-text">AI导航</span>
             </a>
             <nav class="main-nav">
                 <a href="/">首页</a>
@@ -32,7 +32,7 @@ require_once 'includes/functions.php';
             <div style="font-size:15px;line-height:2;background:white;padding:32px;border-radius:12px">
                 <p><strong>更新时间：</strong>2026年4月6日&nbsp;&nbsp;|&nbsp;&nbsp;<strong>生效时间：</strong>2026年4月6日</p>
 
-                <p>GoDaily（https://www.993899.com，以下简称"本站"）非常重视您的隐私保护。本隐私政策旨在向您说明本站如何收集、使用、存储和保护您的个人信息。</p>
+                <p>AI导航（https://www.993899.com，以下简称"本站"）非常重视您的隐私保护。本隐私政策旨在向您说明本站如何收集、使用、存储和保护您的个人信息。</p>
 
                 <h2 style="margin-top:28px;font-size:18px">一、信息收集</h2>
                 <p>当您访问本站时，我们的服务器会自动记录访问日志，包括您的IP地址、浏览器类型、访问时间和访问页面。这些信息仅用于网站安全监控和流量统计分析，不会用于识别个人身份。</p>

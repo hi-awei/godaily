@@ -15,8 +15,8 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h4>关于 GoDaily</h4>
-                    <p>GoDaily 致力于发现和整理最优质的AI工具，为用户提供全面的AI工具导航服务。</p>
+                    <h4>关于 AI导航</h4>
+                    <p>AI导航 致力于发现和整理最优质的AI工具，为用户提供全面的AI工具导航服务。</p>
                     <p style="margin-top:8px;">
                         <a href="https://github.com/hi-awei/godaily" target="_blank" style="color:#fff;font-size:14px;">
                             <svg height="18" width="18" viewBox="0 0 24 24" fill="#fff" style="vertical-align:middle;margin-right:4px;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -27,19 +27,19 @@
                 <div class="footer-col">
                     <h4>快速链接</h4>
                     <ul>
-                        <li><a href="<?= SITE_URL ?>/index.php">首页</a></li>
-                        <li><a href="<?= SITE_URL ?>/tools.php">AI工具库</a></li>
-                        <li><a href="<?= SITE_URL ?>/news.php">AI资讯</a></li>
-                        <li><a href="<?= SITE_URL ?>/submit.php">提交工具</a></li>
+                        <li><a href="/">首页</a></li>
+                        <li><a href="/tools.php">AI工具库</a></li>
+                        <li><a href="/about.php">关于我们</a></li>
+                        <li><a href="/contact.php">联系我们</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4>分类</h4>
                     <ul>
-                        <li><a href="<?= SITE_URL ?>/tools.php?category=llm">大语言模型</a></li>
-                        <li><a href="<?= SITE_URL ?>/tools.php?category=image">AI图像</a></li>
-                        <li><a href="<?= SITE_URL ?>/tools.php?category=video">AI视频</a></li>
-                        <li><a href="<?= SITE_URL ?>/tools.php?category=coding">编程辅助</a></li>
+                        <li><a href="/tools.php?category=llm">大语言模型</a></li>
+                        <li><a href="/tools.php?category=image">AI图像</a></li>
+                        <li><a href="/tools.php?category=video">AI视频</a></li>
+                        <li><a href="/tools.php?category=coding">编程辅助</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -48,13 +48,13 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; <?= date('Y') ?> GoDaily - 每日AI工具导航助你轻松一百. All rights reserved.</p>
+                <p>&copy; <?= date('Y') ?> AI导航 - 精选AI工具导航. All rights reserved.</p>
                 <p>
                     精选AI工具，服务于创作者 &nbsp;|&nbsp;
                     <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow" style="color:rgba(255,255,255,0.5)">宁ICP备2024005816号</a>
                 </p>
                 <?php
-                $links = $db ? $db->query("SELECT name, url FROM friend_links WHERE status=1 ORDER BY sort_order")->fetchAll() : [];
+                $links = isset($db) && $db ? $db->query("SELECT name, url FROM friend_links WHERE status=1 ORDER BY sort_order")->fetchAll() : [];
                 if (!empty($links)):
                 ?>
                 <div class="friend-links" style="margin-top:12px;">
@@ -67,7 +67,7 @@
             </div>
         </div>
     </footer>
-    <script src="<?= SITE_URL ?>/assets/js/main.js"></script>
+    <script src="/assets/js/main.js"></script>
     <script>
         // Mobile menu toggle
         function toggleMobileMenu() {

@@ -27,21 +27,11 @@ try {
 
     $related = $db->query("SELECT * FROM tools WHERE category='" . $tool['category'] . "' AND id!=" . $tool['id'] . " AND status=1 ORDER BY RAND() LIMIT 4")->fetchAll();
     $votes = $db->query("SELECT COUNT(*) FROM votes WHERE tool_id=" . $tool['id'])->fetchColumn();
-    
-    // Get popular news for sidebar
-    $popular_news = $db->query("SELECT id, title FROM news WHERE status=1 ORDER BY view_count DESC LIMIT 5")->fetchAll();
-    
-    // Get recent news for sidebar
-    $recent_news = $db->query("SELECT id, title FROM news WHERE status=1 ORDER BY published_at DESC LIMIT 5")->fetchAll();
-    
-    // Get popular tools for sidebar
-    $popular_tools = $db->query("SELECT slug, name, tagline FROM tools WHERE status=1 ORDER BY views DESC LIMIT 5")->fetchAll();
 
     $pageTitle = $tool['name'];
     $pageDesc = $tool['tagline'] ?: mb_substr(strip_tags($tool['description'] ?? ''), 0, 160);
     $pageKeywords = $tool['name'] . ',AI工具,' . $tool['category'];
     $jsonld = jsonld_tool($tool);
-    $pageDesc = $tool['tagline'] . ' - ' . $tool['name'] . '详细介绍、评分、价格及使用方法。' . SITE_DESC;
 
 } catch (Exception $e) {
     header('Location: tools.php');
@@ -53,9 +43,9 @@ require_once 'templates/header.php';
 
 <div class="container">
     <div class="breadcrumb">
-        <a href="index.php">首页</a> &gt;
-        <a href="tools.php">工具库</a> &gt;
-        <a href="tools.php?category=<?php echo $tool['category']; ?>"><?php echo category_name($tool['category']); ?></a> &gt;
+        <a href="/">首页</a> &gt;
+        <a href="/tools.php">工具库</a> &gt;
+        <a href="/tools.php?category=<?php echo $tool['category']; ?>"><?php echo category_name($tool['category']); ?></a> &gt;
         <span><?php echo clean($tool['name']); ?></span>
     </div>
 
@@ -105,7 +95,6 @@ require_once 'templates/header.php';
                             <div class="tool-description"><?php
                                 $desc = trim(strip_tags($tool['description'] ?? ''));
                                 $tagline = trim($tool['tagline'] ?? '');
-                                // 占位符或空描述：用tagline代替
                                 $isPlaceholder = strlen($desc) < 20 || preg_match('/优秀的AI工具|具有强大的功能|良好的用户体验|业界广受好评|适合各类用户/i', $desc);
                                 if ($isPlaceholder && $tagline) {
                                     echo '<p class="tool-tagline-highlight">' . clean($tagline) . '</p>';
@@ -149,14 +138,6 @@ require_once 'templates/header.php';
                             <div class="stat-row"><span>用户评分</span><strong><?php echo number_format($tool['rating'], 1); ?>/5</strong></div>
                             <div class="stat-row"><span>收录时间</span><strong><?php echo date('Y-m-d', strtotime($tool['created_at'])); ?></strong></div>
                         </div>
-                        <div class="card">
-                            <h3>📰 最新资讯</h3>
-                            <ul class="sidebar-list">
-                                <?php foreach ($recent_news as $n): ?>
-                                    <li><a href="news_detail.php?id=<?= $n['id'] ?>" target="_blank"><?= clean(mb_substr($n['title'], 0, 22)) ?><?= mb_strlen($n['title']) > 22 ? '...' : '' ?></a></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
                     </aside>
                 </div>
             </div>
@@ -176,38 +157,16 @@ function vote(toolId) {
             }
         });
 }
-function copyLink() {
-    navigator.clipboard.writeText(location.href).then(function() { alert('链接已复制！'); });
-}
 </script>
 
 <style>
 .tool-detail-layout { display: grid; grid-template-columns: 1fr auto; gap: 24px; margin: 24px auto; }
 .tool-detail-main-col { min-width: 0; }
 .tool-detail-sidebar { width: 280px; display: flex; flex-direction: column; gap: 20px; }
-.tool-detail-sidebar .sidebar-section { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
-.tool-detail-sidebar h3 { margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); } .tool-detail-sidebar .sidebar-title { margin-bottom: 12px; font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
-.tool-detail-sidebar .sidebar-list { list-style: none; }
-.tool-detail-sidebar .sidebar-list li { margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-.tool-detail-sidebar .sidebar-list li:last-child { border-bottom: none; }
-.tool-detail-sidebar .sidebar-list a { font-size: 13px; color: var(--text); line-height: 1.4; display: block; }
-.tool-detail-sidebar .sidebar-list a:hover { color: var(--primary); }
-.tool-detail-sidebar .sidebar-tools { display: flex; flex-direction: column; gap: 8px; }
-.tool-detail-sidebar .sidebar-tool-card { display: block; padding: 10px; border-radius: var(--radius-sm); background: var(--bg); transition: 0.2s; }
-.tool-detail-sidebar .sidebar-tool-card:hover { transform: translateX(4px); border-left: 3px solid var(--primary); }
-.tool-detail-sidebar .sidebar-tool-name { display: block; font-size: 13px; font-weight: 600; color: var(--text); }
-.tool-detail-sidebar .sidebar-tool-tagline { display: block; font-size: 11px; color: var(--text-light); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tool-detail-sidebar .sidebar-links { display: flex; flex-direction: column; gap: 8px; }
-.tool-detail-sidebar .sidebar-link-btn { display: block; padding: 10px 12px; background: var(--bg); border-radius: var(--radius-sm); font-size: 13px; color: var(--text); text-align: center; transition: 0.2s; }
-.tool-detail-sidebar .sidebar-link-btn:hover { background: var(--primary); color: white; }
-.related-logo { width: 40px; height: 40px; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-.related-logo img { width: 100%; height: 100%; object-fit: contain; }
-@media (max-width: 1024px) { .tool-detail-layout { grid-template-columns: 1fr; } .tool-detail-sidebar { order: 2; } }
+@media (max-width: 900px) {
+    .tool-detail-layout { grid-template-columns: 1fr; }
+    .tool-detail-sidebar { display: none; }
+}
 </style>
 
 <?php require_once 'templates/footer.php'; ?>
-
-
-
-
-

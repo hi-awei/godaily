@@ -27,7 +27,7 @@ $cur = $currentPage ?? '';
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="<?= $siteUrl ?>/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4485249374604824" crossorigin="anonymous"></script>
     <?= $jsonld ?? '' ?>
@@ -45,20 +45,17 @@ $cur = $currentPage ?? '';
 <body>
     <header class="site-header">
         <div class="container header-inner">
-            <a href="<?= $siteUrl ?>/index.php" class="logo">
+            <a href="/" class="logo">
                 <span class="logo-icon">🚀</span>
-                <span class="logo-text">轻松一百</span>
+                <span class="logo-text">AI导航</span>
             </a>
             <nav class="main-nav">
-                <a href="<?= $siteUrl ?>/index.php" class="<?= $cur === 'home' ? 'active' : '' ?>">首页</a>
-                <a href="<?= $siteUrl ?>/tools.php" class="<?= $cur === 'tools' ? 'active' : '' ?>">工具库</a>
-                <a href="<?= $siteUrl ?>/hot.php" class="<?= $cur === 'hot' ? 'active' : '' ?>">🔥 热门</a>
-                <a href="<?= $siteUrl ?>/weekly.php" class="<?= $cur === 'weekly' ? 'active' : '' ?>">📅 周刊</a>
-                <a href="<?= $siteUrl ?>/news.php" class="<?= $cur === 'news' ? 'active' : '' ?>">资讯</a>
-                <a href="<?= $siteUrl ?>/submit.php" class="<?= $cur === 'submit' ? 'active' : '' ?>">提交工具</a>
+                <a href="/" class="<?= $cur === 'home' ? 'active' : '' ?>">首页</a>
+                <a href="/tools.php" class="<?= $cur === 'tools' ? 'active' : '' ?>">工具库</a>
+                <a href="/about.php" class="<?= $cur === 'about' ? 'active' : '' ?>">关于</a>
             </nav>
             <div class="header-actions">
-                <form action="<?= $siteUrl ?>/tools.php" method="get" class="search-form">
+                <form action="/tools.php" method="get" class="search-form">
                     <input type="text" name="q" placeholder="搜索AI工具..." class="search-input">
                     <button type="submit" class="search-btn">🔍</button>
                 </form>
@@ -69,14 +66,11 @@ $cur = $currentPage ?? '';
     
     <!-- Mobile Navigation -->
     <nav class="mobile-nav" id="mobileNav">
-        <a href="<?= $siteUrl ?>/index.php" class="<?= $cur === 'home' ? 'active' : '' ?>">首页</a>
-        <a href="<?= $siteUrl ?>/tools.php" class="<?= $cur === 'tools' ? 'active' : '' ?>">工具库</a>
-        <a href="<?= $siteUrl ?>/hot.php" class="<?= $cur === 'hot' ? 'active' : '' ?>">🔥 热门</a>
-        <a href="<?= $siteUrl ?>/weekly.php" class="<?= $cur === 'weekly' ? 'active' : '' ?>">📅 周刊</a>
-        <a href="<?= $siteUrl ?>/news.php" class="<?= $cur === 'news' ? 'active' : '' ?>">资讯</a>
-        <a href="<?= $siteUrl ?>/submit.php" class="<?= $cur === 'submit' ? 'active' : '' ?>">提交工具</a>
+        <a href="/" class="<?= $cur === 'home' ? 'active' : '' ?>">首页</a>
+        <a href="/tools.php" class="<?= $cur === 'tools' ? 'active' : '' ?>">工具库</a>
+        <a href="/about.php" class="<?= $cur === 'about' ? 'active' : '' ?>">关于</a>
         <div class="mobile-search">
-            <form action="<?= $siteUrl ?>/tools.php" method="get" class="mobile-search-form">
+            <form action="/tools.php" method="get" class="mobile-search-form">
                 <input type="text" name="q" placeholder="搜索AI工具..." class="mobile-search-input">
                 <button type="submit" class="btn-primary">搜索</button>
             </form>
